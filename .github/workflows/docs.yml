@@ -131,9 +131,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          # 1) build the package (ensure it compiles)
+          # build the package (ensure it compiles)
           lake build ${PROJECT_NAME}
-          # 2) build docs (doc-gen integration)
+          # build docs (doc-gen integration)
           lake build ${PROJECT_NAME}:docs
 
       - name: Debug doc output location
