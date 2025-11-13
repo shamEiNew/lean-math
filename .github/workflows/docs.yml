@@ -131,7 +131,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake build ${PROJECT_NAME}
           # use singular "doc" facet
-          lake build ${PROJECT_NAME}:doc
+          lake build ${PROJECT_NAME}:docs
 
       - name: Debug doc output location
         shell: bash
