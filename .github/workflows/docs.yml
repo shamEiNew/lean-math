@@ -32,6 +32,15 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             build-essential pkg-config curl git python3 ca-certificates coreutils wget
 
+      - name: Verify system tools are available
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Check and verify critical tools
+          command -v curl >/dev/null 2>&1 && echo "✓ curl found" || (echo "curl missing!"; exit 1)
+          command -v sleep >/dev/null 2>&1 && echo "✓ sleep found" || (echo "sleep missing!"; exit 1)
+          command -v wget >/dev/null 2>&1 && echo "✓ wget found" || (echo "wget missing!"; exit 1)
+
       - name: Install elan (Lean toolchain manager) (non-interactive)
         shell: bash
         run: |
@@ -81,27 +90,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lean-
 
-      - name: Validate curl & sleep are available
-        shell: bash
-        run: |
-          set -euo pipefail
-          if ! command -v curl >/dev/null 2>&1; then
-            echo "curl is missing despite earlier install; attempting to install again"
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends curl ca-certificates
-          fi
-          if ! command -v sleep >/dev/null 2>&1; then
-            echo "sleep is missing; attempting to install coreutils"
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends coreutils
-          fi
-          echo "curl -> $(command -v curl || true)"
-          echo "sleep -> $(command -v sleep || true)"
-
       - name: lake update (fetch dependencies)
         shell: bash
-        env:
-          PATH: ${{ runner.env.PATH }}
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
@@ -111,11 +101,7 @@ jobs:
             lake update && break
             if [ $i -lt 3 ]; then
               echo "Failed, retrying in 10 seconds..."
-              sleep 10
-            fi
-            if [ $i -eq 3 ]; then
-              echo "lake update failed after 3 attempts" >&2
-              exit 1
+              /bin/sleep 10
             fi
           done
 
