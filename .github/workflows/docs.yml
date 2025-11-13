@@ -16,6 +16,9 @@ env:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -141,6 +144,7 @@ jobs:
           find .lake/build -type f -name '*.html' -o -name '*.json' 2>/dev/null | head -20 || echo "No HTML/JSON docs found"
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
