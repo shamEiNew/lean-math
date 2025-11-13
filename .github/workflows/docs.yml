@@ -139,28 +139,71 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p .lake/build
+          
+          # Read the Lean file and escape HTML
+          LEAN_CODE=$(cat LeanMath/Basic.lean | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g')
+          
           cat > .lake/build/index.html << 'EOF'
           <!DOCTYPE html>
           <html>
           <head>
-            <title>LeanMath Documentation</title>
+            <meta charset="UTF-8">
+            <title>LeanMath - Basic</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
             <style>
-              body { font-family: Arial, sans-serif; margin: 40px; }
-              code { background: #f0f0f0; padding: 2px 6px; }
+              body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: #1e1e1e;
+                color: #d4d4d4;
+                line-height: 1.6;
+              }
+              .container {
+                max-width: 900px;
+                margin: 0 auto;
+                background: #252526;
+                padding: 30px;
+                border-radius: 8px;
+              }
+              h1 {
+                color: #4ec9b0;
+                border-bottom: 2px solid #4ec9b0;
+                padding-bottom: 10px;
+              }
+              pre {
+                background: #1e1e1e;
+                padding: 15px;
+                border-radius: 6px;
+                overflow-x: auto;
+                border-left: 4px solid #4ec9b0;
+              }
+              code {
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+              }
             </style>
           </head>
           <body>
-            <h1>LeanMath Documentation</h1>
-            <p>Build successful! This is a Lean 4 math library.</p>
-            <h2>Modules</h2>
-            <ul>
-              <li><code>LeanMath.Basic</code> - Basic propositions and proofs</li>
-            </ul>
-            <h2>Build Info</h2>
-            <pre>$(cat lean-toolchain)</pre>
+            <div class="container">
+              <h1>LeanMath.Basic</h1>
+              <p>Lean 4 module: Propositions, Proofs, and Logical Reasoning</p>
+              <pre><code class="language-lean">EOF
+          
+          echo "$LEAN_CODE" >> .lake/build/index.html
+          
+          cat >> .lake/build/index.html << 'EOF'
+          </code></pre>
+              <script>
+                hljs.highlightAll();
+              </script>
+            </div>
           </body>
           </html>
           EOF
+          
+          echo "HTML documentation generated at .lake/build/index.html"
 
       - name: Deploy to GitHub Pages
         id: deployment
