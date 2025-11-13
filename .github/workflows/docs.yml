@@ -28,10 +28,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential pkg-config curl git python3
 
-      - name: Install elan (Lean toolchain manager)
+      - name: Install elan (Lean toolchain manager) (non-interactive)
         shell: bash
         run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh
+          # run installer non-interactively (-y accepts defaults)
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          # make elan available to later steps
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
           elan --version
 
