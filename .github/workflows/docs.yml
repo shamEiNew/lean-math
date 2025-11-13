@@ -23,32 +23,52 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Install system prerequisites
+      - name: Install system prerequisites (ensure curl & coreutils present)
+        shell: bash
         run: |
+          set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y build-essential pkg-config curl git python3
+          # install curl, sleep (coreutils), ca-certificates and other build deps
+          sudo apt-get install -y --no-install-recommends \
+            build-essential pkg-config curl git python3 ca-certificates coreutils wget
 
       - name: Install elan (Lean toolchain manager) (non-interactive)
         shell: bash
         run: |
-          # run installer non-interactively (-y accepts defaults)
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          set -euo pipefail
+          # prefer curl if available, otherwise use wget
+          if command -v curl >/dev/null 2>&1; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          elif command -v wget >/dev/null 2>&1; then
+            wget -qO- https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          else
+            echo "Neither curl nor wget available to download elan; aborting" >&2
+            exit 1
+          fi
           # source elan environment to make it available immediately
-          source $HOME/.elan/env
+          if [ -f "$HOME/.elan/env" ]; then
+            # shellcheck disable=SC1090
+            source "$HOME/.elan/env"
+          fi
           # make elan available to later steps
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-          elan --version
+          elan --version || true
 
       - name: Install requested toolchain (from lean-toolchain)
         shell: bash
         run: |
+          set -euo pipefail
           # ensure elan is in PATH
           export PATH="$HOME/.elan/bin:$PATH"
           # read the toolchain file and install the exact toolchain
-          TOOLCHAIN=$(cat lean-toolchain)
-          echo "Installing toolchain: $TOOLCHAIN"
-          elan toolchain install "$TOOLCHAIN"
-          elan show
+          if [ -f lean-toolchain ]; then
+            TOOLCHAIN=$(cat lean-toolchain)
+            echo "Installing toolchain: $TOOLCHAIN"
+            elan toolchain install "$TOOLCHAIN"
+          else
+            echo "lean-toolchain not found; elan will use default" >&2
+          fi
+          elan show || true
 
       - name: Setup cache for elan and lake build artifacts
         uses: actions/cache@v4
@@ -61,30 +81,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lean-
 
-      - name: Ensure curl & sleep are available
+      - name: Validate curl & sleep are available
         shell: bash
         run: |
           set -euo pipefail
-          # If both curl and sleep are present, do nothing.
-          if command -v curl >/dev/null 2>&1 && command -v sleep >/dev/null 2>&1; then
-            echo "curl and sleep already installed"
-            exit 0
-          fi
-          # Attempt to install on Debian/Ubuntu (ubuntu-latest runner)
-          if command -v apt-get >/dev/null 2>&1; then
+          if ! command -v curl >/dev/null 2>&1; then
+            echo "curl is missing despite earlier install; attempting to install again"
             sudo apt-get update
-            sudo apt-get install -y --no-install-recommends curl ca-certificates coreutils
-          elif command -v apk >/dev/null 2>&1; then
-            sudo apk add --no-cache curl ca-certificates coreutils
-          elif command -v yum >/dev/null 2>&1; then
-            sudo yum install -y curl coreutils
-          else
-            echo "Unsupported package manager; please ensure curl and sleep are installed" >&2
-            exit 1
+            sudo apt-get install -y --no-install-recommends curl ca-certificates
           fi
-          # verify
-          command -v curl >/dev/null 2>&1 || { echo "curl still missing after install" >&2; exit 1; }
-          command -v sleep >/dev/null 2>&1 || { echo "sleep still missing after install" >&2; exit 1; }
+          if ! command -v sleep >/dev/null 2>&1; then
+            echo "sleep is missing; attempting to install coreutils"
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends coreutils
+          fi
+          echo "curl -> $(command -v curl || true)"
+          echo "sleep -> $(command -v sleep || true)"
 
       - name: lake update (fetch dependencies)
         shell: bash
@@ -101,7 +113,6 @@ jobs:
               echo "Failed, retrying in 10 seconds..."
               sleep 10
             fi
-            # if last attempt fails, exit with non-zero
             if [ $i -eq 3 ]; then
               echo "lake update failed after 3 attempts" >&2
               exit 1
@@ -109,9 +120,11 @@ jobs:
           done
 
       - name: Build package then docs
+        shell: bash
         env:
           PATH: ${{ runner.env.PATH }}
         run: |
+          set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           # 1) build the package (ensure it compiles)
           lake build ${PROJECT_NAME}
@@ -119,6 +132,7 @@ jobs:
           lake build ${PROJECT_NAME}:docs
 
       - name: Debug doc output location
+        shell: bash
         run: |
           echo "Listing .lake/build/doc..."
           find . -type d -path "*/.lake/build/doc*" -maxdepth 6 -print || true
@@ -130,4 +144,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./.lake/build/doc   # change this if your docs are elsewhere
-          keep_files: false
