@@ -128,22 +128,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # ensure elan is on PATH and show PATH for debugging
           export PATH="$HOME/.elan/bin:$PATH"
-          echo "PATH=$PATH"
-          command -v git >/dev/null 2>&1 || { echo "git not found in PATH"; exit 1; }
-          git --version
-
-          # quick diagnostic clone to show git/network errors (doesn't stop the run)
-          TMPDIR="$(mktemp -d)"
-          echo "Diagnostic clone mathlib into $TMPDIR (verbose)..."
-          GIT_TRACE=1 GIT_CURL_VERBOSE=1 git clone --depth 1 https://github.com/leanprover-community/mathlib4 "$TMPDIR" || echo "diagnostic clone failed"
-          rm -rf "$TMPDIR"
-
-          # build the package (ensure it compiles)
           lake build ${PROJECT_NAME}
-          # build docs (doc-gen integration)
-          lake build ${PROJECT_NAME}:docs
+          # use singular "doc" facet
+          lake build ${PROJECT_NAME}:doc
 
       - name: Debug doc output location
         shell: bash
