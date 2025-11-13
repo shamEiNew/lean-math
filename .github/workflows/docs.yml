@@ -47,7 +47,7 @@ jobs:
           # read the toolchain file and install the exact toolchain
           TOOLCHAIN=$(cat lean-toolchain)
           echo "Installing toolchain: $TOOLCHAIN"
-          elan toolchain install --default "$TOOLCHAIN"
+          elan toolchain install "$TOOLCHAIN"
           elan show
 
       - name: Setup cache for elan and lake build artifacts
