@@ -129,20 +129,18 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          # build the package only (no docs facet)
           lake build ${PROJECT_NAME}
-          # use singular "doc" facet
-          lake build ${PROJECT_NAME}:docs
 
       - name: Debug doc output location
         shell: bash
         run: |
-          echo "Listing .lake/build/doc..."
-          find . -type d -path "*/.lake/build/doc*" -maxdepth 6 -print || true
-          echo "List files under .lake/build/doc (if present):"
-          find . -path "*/.lake/build/doc/*" -maxdepth 6 -print || true
+          set -euo pipefail
+          echo "Checking for build artifacts..."
+          ls -la .lake/build/ || true
+          find .lake/build -type f -name '*.html' -o -name '*.json' 2>/dev/null | head -20 || echo "No HTML/JSON docs found"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./.lake/build/doc   # change this if your docs are elsewhere
+          publish_dir: ./.lake/build
