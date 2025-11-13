@@ -90,14 +90,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lean-
 
+      - name: Setup git and SSH for large clones
+        shell: bash
+        run: |
+          set -euo pipefail
+          # configure git for large repos and better performance
+          git config --global http.postBuffer 524288000
+          git config --global http.maxRequestBuffer 100M
+          git config --global core.compression 0
+          git config --global http.lowSpeedLimit 0
+          git config --global http.lowSpeedTime 999999
+          # use HTTPS instead of SSH to avoid key issues
+          git config --global url."https://github.com/".insteadOf "git://github.com/"
+          echo "Git configuration complete"
+
       - name: lake update (fetch dependencies)
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          # configure git to handle large repos
-          git config --global http.postBuffer 524288000
-          git config --global http.maxRequestBuffer 100M
           # retry lake update up to 3 times to handle transient network issues
           for i in {1..3}; do
             echo "Attempt $i of 3..."
@@ -105,8 +116,8 @@ jobs:
               break
             fi
             if [ $i -lt 3 ]; then
-              echo "Failed, retrying in 15 seconds..."
-              /bin/sleep 15
+              echo "Failed, retrying in 20 seconds..."
+              /bin/sleep 20
             else
               echo "lake update failed after 3 attempts"
               exit 1
