@@ -140,15 +140,114 @@ Iff.intro
 
   )
 
+/-In the above there are two cases in forward direction;
+Case 1: If I have a proof of p and then I construct proof of (p ∨ q) ∧ (p ∨ r)
+without having to worry about q r
+Case 2: If I have a proof of q ∧ r then I have proof of both q and r without assuming p
+
+Two nested cases in backward direction
+Since its an And statment it will go in one direction
+but part of And's are Or so we have two cases which get used
+so when I have proof (p ∨ q) ∧ (p ∨ r) that means I have both side proof, with left side
+I have proof of p this means we have a proof p ∨ (q ∧ r)
+but in case we have a proof of q that means p may be anything and to show p ∨ (q ∧ r) I
+must assure that we have a proof of r or p too, therefore
+we use the second part of And as that also is True, and assuming p is true then
+p ∨ (q ∧ r) as usual, and if r holds using q and r we construct p ∨ (q ∧ r).
+
+-/
+
 -- other properties
-example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
-example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) := sorry
-example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := sorry
-example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
-example : ¬(p ∧ ¬p) := sorry
-example : p ∧ ¬q → ¬(p → q) := sorry
-example : ¬p → (p → q) := sorry
-example : (¬p ∨ q) → (p → q) := sorry
-example : p ∨ False ↔ p := sorry
-example : p ∧ False ↔ False := sorry
-example : (p → q) → (¬q → ¬p) := sorry
+example : (p → (q → r)) ↔ (p ∧ q → r) :=
+Iff.intro
+(fun h: (p → (q → r)) =>
+  fun hpq : p ∧ q =>
+    h hpq.1 hpq.2
+)
+(
+  fun h : (p ∧ q → r) =>
+    fun hp : p =>
+      fun hq : q =>
+        h (And.intro hp hq)
+)
+example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) :=
+Iff.intro
+
+  (fun h : (p ∨ q) → r =>
+  And.intro (fun hp: p => h (Or.intro_left q hp))
+            (fun hq : q => h (Or.intro_right p hq))
+
+  )
+  (fun h : (p → r) ∧ (q → r) =>
+    fun hpq : (p ∨ q) =>
+      Or.elim hpq
+        (fun hp: p => h.1 hp)
+          (fun hq : q => h.2 hq)
+  )
+example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=
+Iff.intro
+(fun h : ¬(p ∨ q) =>
+  And.intro
+  (fun hp : p => h (Or.intro_left q hp))
+  (fun hq : q => h (Or.intro_right p hq))
+)
+
+(λ ⟨hnp, hnq⟩ hpq =>              -- assume ¬p ∧ ¬q and hpq : p ∨ q
+    Or.elim hpq
+      (λ hp:p=> hnp hp)                 -- if p then contradiction via hnp
+      (λ hq:q =>  hnq hq)                 -- if q then contradiction via hnq
+)
+
+
+example : ¬p ∨ ¬q → ¬(p ∧ q) :=
+fun h : ¬p ∨ ¬q =>
+fun hpq : p ∧ q =>
+Or.elim h
+ (fun hp: ¬p => hp hpq.1)
+ (fun hq: ¬ q => hq hpq.2)
+
+
+example : ¬(p ∧ ¬p) := fun h : p ∧ ¬p => h.2 h.1
+
+
+example : p ∧ ¬q → ¬(p → q) :=
+fun h : p ∧ ¬q =>
+  fun hpq : (p → q) =>
+    absurd (hpq h.1) (h.2)
+
+example : ¬p → (p → q) :=
+fun h : ¬p =>
+  fun hp : p => False.elim (h hp)
+
+
+example : (¬p ∨ q) → (p → q) :=
+fun h : (¬p ∨ q) =>
+  fun hp : p =>
+    Or.elim h
+      (fun hnp: ¬p => False.elim (hnp hp))
+      (fun hq : q => hq)
+
+example : p ∨ False ↔ p :=
+Iff.intro
+  (fun h : p ∨ False =>
+    Or.elim h
+      (fun hp : p => hp)
+      (fun hF: False => hF.elim)
+      )
+    (fun hp : p => Or.intro_left (False) (hp))
+
+
+example : p ∧ False ↔ False :=
+Iff.intro
+  (fun h : p ∧ False => h.2)
+  (fun hf : False => hf.elim)
+
+
+example : (p → q) → (¬q → ¬p) :=
+fun h : p → q =>
+  fun hnq : ¬q =>
+    fun hp : p => False.elim (hnq (h hp))
+
+
+example : p ∧ (p → q) → q :=
+  fun h : p ∧ (p → q) => h.2 h.1
