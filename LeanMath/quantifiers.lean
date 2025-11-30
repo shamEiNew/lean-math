@@ -281,6 +281,9 @@ On the other side we require double negation. As `¬¬p ≃ p`-/
 
 #check byContradiction
 
+example (t : Prop): ¬¬t → t :=
+fun h : ¬¬t => byContradiction (fun ht : ¬t => h ht)
+
 example : (∃ x, p x) ↔ ¬ (∀ x, ¬ p x) :=
 Iff.intro
   (fun h : (∃ x, p x) => fun h1 :  (∀ x, ¬ p x) =>
@@ -289,4 +292,38 @@ Iff.intro
   (fun hn : ¬ (∀ x, ¬ p x) => byContradiction (fun h : ¬ (∃ x, p x) =>
    hn (fun x (hx:p x )=> h ⟨x, hx⟩)))
 
-example : (¬ ∃ x, p x) ↔ (∀ x, ¬ p x) := sorry
+example : (¬ ∃ x, p x) ↔ (∀ x, ¬ p x) :=
+Iff.intro
+  (fun h : ¬ (∃ x, p x) => fun x (hx: p x) => h ⟨x, hx ⟩)
+  (fun h :(∀ x, ¬ p x) => fun hex : ∃ x, p x =>
+  Exists.elim hex (fun w => fun hw : p w => show False from (h w) hw))
+
+
+example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) :=
+Iff.intro
+(fun h : ¬ (∀ x, p x) =>
+  byContradiction (fun hn : ¬ (∃ x, ¬ p x) =>
+  h (fun x => byContradiction (fun hpx => hn ⟨x, hpx ⟩))
+))
+(fun h : (∃ x, ¬ p x) => fun hn :  (∀ x, p x) =>
+Exists.elim h (fun x => fun hpx : ¬ p x => show False from hpx (hn x))
+
+)
+
+
+example : (∀ x, p x → r) ↔ (∃ x, p x) → r :=
+Iff.intro
+(fun h: (∀ x, p x → r) => fun hp : (∃ x, p x) =>
+Exists.elim hp (fun w => fun hw : p w => (h w) hw))
+
+(fun h : (∃ x, p x) → r =>
+fun w => fun hp : p w => h ⟨w, hp ⟩)
+
+
+-- example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r :=
+-- Iff.intro
+-- (fun h : (∃ x, p x → r) => fun hp : (∀ x, p x) =>
+-- Exists.elim h (fun w => fun hpw : p w → r => hpw (hp w))
+-- )
+-- (fun h : (∀ x, p x) → r =>
+-- Exists.intro (a,  fun hp : p a => (h hp)))
