@@ -327,3 +327,16 @@ fun w => fun hp : p w => h ⟨w, hp ⟩)
 -- )
 -- (fun h : (∀ x, p x) → r =>
 -- Exists.intro (a,  fun hp : p a => (h hp)))
+
+variable (men : Type) (barber : men)
+variable (shaves : men → men → Prop)
+
+#check Iff.elim
+
+
+-- Russells Paradox
+example (h : ∀ x : men, shaves barber x ↔ ¬ shaves x x) : False :=
+have hf := h barber
+have n_shaves : ¬ shaves barber barber :=
+    λ s => (hf.mp s) s
+n_shaves (hf.mpr n_shaves)
