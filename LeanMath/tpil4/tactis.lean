@@ -38,6 +38,7 @@ apply Iff.intro
     . apply Or.inr
       exact hpr.2
 
+-- example
 example : ∀ a b c : Nat , a = b → a = c → c = b := by
   intros
   apply Eq.trans
