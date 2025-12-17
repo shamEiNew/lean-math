@@ -1,4 +1,5 @@
 {"plugins": [],
+ "package": "lean-math",
  "options":
  {"weak.linter.mathlibStandardSet": true,
   "relaxedAutoImplicit": false,

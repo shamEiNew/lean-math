@@ -1,12 +1,12 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["99dd112b3a271c3c.olean"],
-  "i": "ab678d0a80bc6d74.ilean",
-  "c": "6cb044de3989063a.c"},
+ {"o": ["5fdb58794187a5d7.olean"],
+  "i": "8d222d835c707ad1.ilean",
+  "c": "0a73a4032960a6f0.c"},
  "log":
  [{"message":
-   ".> LEAN_PATH=/home/runner/work/lean-math/lean-math/.lake/packages/Cli/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/batteries/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/Qq/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/aesop/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/importGraph/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/plausible/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/mathlib/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/build/lib/lean /home/runner/.elan/toolchains/leanprover--lean4---v4.26.0-rc2/bin/lean /home/runner/work/lean-math/lean-math/LeanMath.lean -o /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath.olean -i /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath.ilean -c /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath.c --setup /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath.setup.json --json",
+   ".> LEAN_PATH=/home/runner/work/lean-math/lean-math/.lake/packages/Cli/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/batteries/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/Qq/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/aesop/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/importGraph/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/plausible/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/mathlib/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/build/lib/lean /home/runner/.elan/toolchains/leanprover--lean4---v4.27.0-rc1/bin/lean /home/runner/work/lean-math/lean-math/LeanMath.lean -o /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath.olean -i /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath.ilean -c /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath.c --setup /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath.setup.json --json",
    "level": "trace"}],
  "inputs":
  [["LeanMath:deps",
@@ -15,14 +15,14 @@
        [["@«lean-math»:extraDep", "00000000000006bb"]]],
       ["imports",
        [["LeanMath.Basic transitive imports (legacy)", "00000000000006bb"],
-        ["LeanMath.Basic:importAllArts", "a9c8d2a303d86796"]]]]],
+        ["LeanMath.Basic:importAllArts", "b457ce368f91892a"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
       ["package external libraries", "00000000000006bb"],
       ["module dynlibs", "00000000000006bb"],
       ["module plugins", "00000000000006bb"]]]]],
-  ["Lean 4.26.0, commit 9d4ad1273f6cea397c3066c2c83062a4410d16bf",
-   "c1ab21c0a088cff7"],
+  ["Lean 4.27.0, commit 2fcce7258eeb6e324366bc25f9058293b04b7547",
+   "6f43b597efea5d4c"],
   ["/home/runner/work/lean-math/lean-math/LeanMath.lean", "b0bf5ecb937d5173"],
   ["options",
    [["-DmaxSynthPendingDepth=3", "c78e353d34de85d4"],
@@ -30,4 +30,4 @@
     ["-DrelaxedAutoImplicit=false", "74a2b5546b55be80"],
     ["-Dpp.unicode.fun=true", "9b94070140457fab"]]],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "a76b2d68c202c442"}
+ "depHash": "c002be501a0fc3f6"}

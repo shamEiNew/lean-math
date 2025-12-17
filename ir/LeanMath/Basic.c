@@ -13,18 +13,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-LEAN_EXPORT lean_object* l_Proof_ctorIdx(lean_object*, lean_object*);
-LEAN_EXPORT lean_object* l_Proof_ctorIdx(lean_object* x_1, lean_object* x_2) {
-_start:
-{
-lean_object* x_3; 
-x_3 = lean_unsigned_to_nat(0u);
-return x_3;
-}
-}
 lean_object* initialize_Init(uint8_t builtin);
 static bool _G_initialized = false;
-LEAN_EXPORT lean_object* initialize_LeanMath_Basic(uint8_t builtin) {
+LEAN_EXPORT lean_object* initialize_lean_x2dmath_LeanMath_Basic(uint8_t builtin) {
 lean_object * res;
 if (_G_initialized) return lean_io_result_mk_ok(lean_box(0));
 _G_initialized = true;
