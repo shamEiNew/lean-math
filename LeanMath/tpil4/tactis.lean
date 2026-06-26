@@ -45,3 +45,14 @@ example : ∀ a b c : Nat , a = b → a = c → c = b := by
   apply Eq.symm
   assumption
   assumption
+
+--use of unhygienic
+example : ∀ a b c : Nat , a = b → a = c → c = b := by unhygienic
+  intros
+  apply Eq.trans
+  apply Eq.symm
+  exact a_2
+  exact a_1
+
+example : ∀ a b c : Nat , a = b → a = c → c = b :=
+  (fun a b c => fun h1 : a = b => fun h2 : a = c => Eq.trans (Eq.symm h2) h1)

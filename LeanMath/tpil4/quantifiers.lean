@@ -217,6 +217,8 @@ theorem odd_plus_odd (h1 : IsOdd a) (h2 : IsOdd b) : IsEven (a + b) :=
     )))
 
 
+#check Nat.succ
+
 ----- Proving Identities -----
 open Classical
 
