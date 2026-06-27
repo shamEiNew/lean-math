@@ -73,16 +73,13 @@ example : p ∨ q ↔ q ∨ p :=
 -- associativity of ∧ and ∨
 example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) :=
   Iff.intro
-    (fun h1 : (p ∧ q) ∧ r =>
-      show p ∧ (q ∧ r) from
-        And.intro
-          (h1.left.left)
-          (And.intro h1.left.right h1.right))
-    (fun h2 : p ∧ (q ∧ r) =>
-      show (p ∧ q) ∧ r from
-        And.intro
-          (And.intro h2.left h2.right.left)
-          h2.right.right)
+  (
+    fun h1 : (p ∧ q) ∧ r =>
+      And.intro (h1.1.1) ((And.intro (h1.1.2) (h1.2))))
+  (
+    fun h1 : p ∧ (q ∧ r) =>
+      And.intro (And.intro h1.1 h1.2.1) h1.2.2
+  )
 
 
 
