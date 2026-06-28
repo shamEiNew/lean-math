@@ -1,3 +1,15 @@
+-- Universal Quantifier
+/-
+Intro rule: given an aribbitrary element for which p x holds
+we say that it holds for all x
+
+Elimination rule: given a proof ∀ x : α  p x, and any term t:α
+we have a proof of p t
+-/
+
+#check ∀ n : Nat, n + 0 = n
+
+
 example (α : Type) (p q : α → Prop) :
     (∀ x : α, p x ∧ q x) → ∀ y : α, p y :=
   fun h : ∀ x : α, p x ∧ q x =>
@@ -27,6 +39,8 @@ to the same normal form.-/
 example (f: α → β) (a:α) : (fun x => f x) a = f a := Eq.refl _
 
 example : 2 + 3 = 5 := rfl
+
+example : 3 + 3 = 6 := rfl
 
 
 --Subsitution
@@ -342,3 +356,85 @@ have hf := h barber
 have n_shaves : ¬ shaves barber barber :=
     λ s => (hf.mp s) s
 n_shaves (hf.mpr n_shaves)
+
+
+--EXERCISES
+
+variable (α : Type) (p q : α → Prop)
+
+example : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x) :=
+  Iff.intro
+    (
+      fun h : ∀ x, p x ∧ q x =>
+      And.intro (fun y => (h y).left) (fun y => (h y).right)
+    )
+    (
+      fun h : (∀ x, p x) ∧ (∀ x, q x) =>
+        fun y => And.intro (h.left y) (h.right y)
+    )
+
+
+
+example : (∀ x, p x → q x) → (∀ x, p x) → (∀ x, q x) :=
+  fun h : (∀ x, p x → q x) =>
+    fun hp : ∀ x, p x => fun y => h y (hp y)
+
+
+
+example : (∀ x, p x) ∨ (∀ x, q x) → ∀ x, p x ∨ q x :=
+  fun h =>
+    Or.elim h
+      ( fun hp : (∀ x, p x) => fun y => Or.inl (hp y)
+      )
+      (
+        fun hq : (∀ x, q x) => fun y => Or.inr (hq y)
+      )
+
+
+variable (α : Type) (p q : α → Prop)
+variable (r : Prop)
+
+example : α → ((∀ x : α, r) ↔ r) :=
+  fun y : α =>
+  Iff.intro
+  (fun h  => h y)
+  (fun hr => fun _ => hr)
+
+
+-- Requires classical and can't be proven in intuition logic
+example : (∀ x, p x ∨ r) → ((∀ x, p x) ∨ r) :=
+  fun h =>
+    byContradiction (
+      fun hn =>
+        hn (
+          Or.inl (
+            fun x =>
+              Or.elim (h x)
+                (fun hp => hp)
+                (fun hr =>
+                  False.elim (
+                    hn (Or.inr hr)
+                  )
+                )
+          )
+        )
+    )
+
+
+example :  ((∀ x, p x) ∨ r) → (∀ x, p x ∨ r) :=
+  fun h : ((∀ x, p x) ∨ r) => fun y =>
+    Or.elim h
+      (fun hp : ∀ x, p x => Or.inl (hp y))
+      (fun hr : r => Or.inr hr)
+
+
+example : (∀ x, r → p x) →  (r → ∀ x, p x) :=
+  fun h : (∀ x, r → p x) =>
+    fun hr : r =>
+      fun y =>
+        (h y) hr
+
+example :(r → ∀ x, p x) → (∀ x, r → p x) :=
+  fun h : (r → ∀ x, p x) =>
+    fun y =>
+      fun hr : r => (h hr) y
