@@ -438,3 +438,22 @@ example :(r → ∀ x, p x) → (∀ x, r → p x) :=
   fun h : (r → ∀ x, p x) =>
     fun y =>
       fun hr : r => (h hr) y
+
+
+def even (n : Nat) : Prop := ∃ b, n = 2*b
+
+def prime (n: Nat) : Prop := ∀ x, n % x = 0 → (x = 1 ∨ x = n)
+
+def infinitely_many_primes : Prop := ∀ n : Nat, ∃ p : Nat, p > n ∧ prime p
+
+def Fermat_prime (n : Nat) : Prop := prime n ∧ (∃ k : Nat, n = 2^(2^k) + 1)
+
+def infinitely_many_Fermat_primes : Prop := ∀ n : Nat, ∃ p : Nat, p > n ∧ Fermat_prime p
+
+def goldbach_conjecture : Prop :=
+  ∀ n : Nat,
+    n > 2 ∧ n % 2 = 0 →
+    ∃ a b : Nat,
+      prime a ∧
+      prime b ∧
+      n = a + b
