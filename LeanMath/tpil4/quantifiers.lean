@@ -457,3 +457,12 @@ def goldbach_conjecture : Prop :=
       prime a ∧
       prime b ∧
       n = a + b
+
+def Fermats_last_theorem : Prop :=
+  ∀ n : Nat,
+    n > 2 →
+    ¬ ∃ a b c : Nat,
+      a > 0 ∧
+      b > 0 ∧
+      c > 0 ∧
+      a^n + b^n = c^n
