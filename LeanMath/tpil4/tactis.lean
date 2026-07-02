@@ -74,7 +74,7 @@ theorem test1 (p q : Prop) (hp : p) (hq : q) : p ∧ q ∧ p := by
     case left => exact hq
     case right => exact hp
 
-
+--rename the last few variables
 example : ∀ a b c d : Nat, a = b → a = d → a = c → c = b := by
   intros
   rename_i h1 _ h2
@@ -83,6 +83,7 @@ example : ∀ a b c d : Nat, a = b → a = d → a = c → c = b := by
   exact h2
   exact h1
 
+--revert is intro opposite includes the hypothesis in goal
 example (x : Nat) : x = x := by
   revert x
   intro y
@@ -93,3 +94,75 @@ example (x y : Nat) (h : x = y) : y = x := by
   intros
   apply Eq.symm
   assumption
+
+--generalizes the hypothesis and replaces the main goal
+example : 3 = 3 := by
+  generalize 3 = x
+  revert x
+  intro y
+  rfl
+
+
+open Nat
+example (P : Nat → Prop)
+    (h₀ : P 0) (h₁ : ∀ n, P (succ n))
+    (m : Nat) : P m := by
+  cases m with
+  | zero    => exact h₀
+  | succ m' => exact h₁ m'
+
+--Rewriting all proofs using tactics
+open Classical
+
+variable (p q r : Prop)
+
+example : (p → q ∨ r) → ((p → q) ∨ (p → r)) := by
+  intro hp
+  by_cases hq : p → q
+  · exact Or.inl hq
+  · right
+    intro hp'
+    have hqr : q ∨ r := hp hp'
+    cases hqr with
+    | inl hq' =>
+        exfalso
+        apply hq
+        intro _
+        exact hq'
+    | inr hr =>
+        exact hr
+
+variable (p q r : Prop)
+
+example (p q : Prop) : ¬(p → q) → p ∧ ¬q := by
+  intro h
+  by_cases hpq : p ∧ ¬q
+  · exact hpq
+  · have pq : p → q := by
+      intro hp
+      by_cases hq :q
+      · exact hq
+      · exact False.elim (hpq (And.intro hp hq))
+    exact False.elim (h pq)
+
+
+example : (p → q) → (¬p ∨ q) := by
+  intro h
+  by_cases hp:p
+  · exact Or.inr (h hp)
+  · exact Or.inl hp
+
+
+example : (¬q → ¬p) → (p → q) := sorry
+
+example : p ∨ ¬p := by
+  by_cases hp:p
+  · exact Or.inl hp
+  · exact Or.inr hp
+
+example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := by
+  apply Iff.intro
+  · intro h ;apply And.intro;intro hp;exact h (Or.inl hp);intro hq;exact h (Or.inr hq)
+  · intro h;intro hpq;apply Or.elim hpq;intro hp;exact False.elim (h.1 hp);intro hq;exact False.elim (h.2 hq)
+
+example : (((p → q) → p) → p) := sorry
