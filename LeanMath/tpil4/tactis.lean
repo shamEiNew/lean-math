@@ -166,3 +166,25 @@ example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := by
   · intro h;intro hpq;apply Or.elim hpq;intro hp;exact False.elim (h.1 hp);intro hq;exact False.elim (h.2 hq)
 
 example : (((p → q) → p) → p) := sorry
+
+
+variable (α : Type) ( p q : α → Prop)
+variable (r : Prop)
+
+example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := by
+  apply Iff.intro
+  · intro h
+    · by_cases he : ∃ x, ¬ p x
+      · exact he
+      · have hpx : ∀ x, p x := by
+          intros hx
+          by_cases hp : p hx
+          · exact hp
+          · exact False.elim (he ⟨hx, hp ⟩)
+        exact False.elim (h hpx)
+  · intro h
+    apply Exists.elim h
+    intro x hx
+    intro h_all
+    have h_px := h_all x
+    exact hx h_px
