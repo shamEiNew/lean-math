@@ -209,6 +209,12 @@ variable (p q r : Prop)
 
 -- Contrapositive implies direct implication
 -- classical proof of (¬q → ¬p) → (p → q)
-example : (¬q → ¬p) → (p → q) := sorry
+example : (¬q → ¬p) → (p → q) := by
+  intros h hp
+  by_cases hq : q
+  · exact hq
+  · exact False.elim ((h hq) hp)
 
-example : (((p → q) → p) → p) := sorry
+--NOT provable using intuitonist logic requires bycontradicto
+example : (((p → q) → p) → p) := by
+  sorry
