@@ -215,6 +215,12 @@ example : (¬q → ¬p) → (p → q) := by
   · exact hq
   · exact False.elim ((h hq) hp)
 
---NOT provable using intuitonist logic requires bycontradicto
+--NOT provable using intuitonist logic requires bycontradicton
 example : (((p → q) → p) → p) := by
-  sorry
+  intro h
+  by_cases hp : p
+  · exact hp
+  · have n_hp : p → q := by
+      intro hpt
+      exact False.elim (hp hpt)
+    exact (h n_hp)
