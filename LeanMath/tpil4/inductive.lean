@@ -87,3 +87,39 @@ theorem nextprevious_same (day : Weekday) : next (previous day) = previous (next
   cases day <;> rfl
 
 end Weekday
+
+/-
+Constructors with Arguments.
+The argument motive in `prod_example`is used to specify the type of the object you want to construct,
+and it is a function because it may depend on the pair.
+-/
+
+namespace Hidden
+inductive Prod (α : Type u) (β : Type v)
+  | mk : α → β → Prod α β
+
+inductive Sum (α : Type u) (β : Type v) where
+  | inl : α → Sum α β
+  | inr : β → Sum α β
+
+#check Prod
+
+--Extracts the first element from (a, b)
+def fst_element (p : Prod α β):α :=
+  match p with
+  | Prod.mk a b => a
+
+#eval fst_element (Prod.mk "s" "m")
+#eval fst_element (Prod.mk 1 2)
+#eval fst_element (Prod.mk (-0.5) 1)
+
+
+def prod_example (p : Prod Bool Nat) : Nat :=
+  Prod.casesOn (motive := fun _ => Nat) p
+    (fun b n => cond b (2 * n) (2 * n + 1))
+
+#eval prod_example (Prod.mk true 3)
+
+#check (true, 3)
+#check Prod.mk true 3
+end Hidden
