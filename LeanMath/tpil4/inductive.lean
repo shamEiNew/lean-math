@@ -190,4 +190,26 @@ def nat_to_bool (n : Nat) : Nat :=
 #eval nat_to_bool 3
 #eval nat_to_bool 0
 
+
+structure Group where
+  element : Type u
+  identity : element
+  binop : element → element → element
+  binop_assoc : ∀ a b c, binop (binop a b) c = binop a (binop b c)
+  left_identity : ∀ a, binop identity a = a
+  right_identity : ∀ a, binop a identity = a
+  exists_inverse : ∀ a, ∃ b, (binop a b = identity) ∧ (binop b a = identity)
+
+--Defining integers group
+def integersGroup : Group :=
+  {
+    element := Int
+    identity := 0
+    binop a b := a + b
+    binop_assoc := by omega
+    left_identity := by intro a; exact Int.zero_add a
+    right_identity := by intro a; exact Int.add_zero a
+    exists_inverse := fun a => ⟨-a, by omega, by omega⟩
+  }
+
 end Hidden
