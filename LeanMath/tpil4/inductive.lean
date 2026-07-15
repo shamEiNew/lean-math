@@ -200,6 +200,8 @@ structure Group where
   right_identity : ∀ a, binop a identity = a
   exists_inverse : ∀ a, ∃ b, (binop a b = identity) ∧ (binop b a = identity)
 
+#check Group
+
 --Defining integers group
 def integersGroup : Group :=
   {
@@ -213,3 +215,22 @@ def integersGroup : Group :=
   }
 
 end Hidden
+
+#check Or.elim
+
+/-
+As exercises, we encourage you to develop a notion of composition for partial functions
+from α to β and β to γ, and show that it behaves as expected. We also encourage you to
+show that Bool and Nat are inhabited, that the product of two inhabited types is inhabited,
+and that the type of functions to an inhabited type is inhabited.
+-/
+
+structure MyAnd (a b : Prop) : Prop where
+  intro ::
+  left :  a
+  right : b
+
+theorem MyAnd_commutes (p q : Prop) : MyAnd p q ↔ MyAnd q p :=
+  Iff.intro
+  (fun h : MyAnd p q => MyAnd.intro (h.right) (h.left))
+  (fun h : MyAnd q p => MyAnd.intro (h.right) (h.left))
