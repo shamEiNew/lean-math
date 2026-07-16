@@ -190,6 +190,12 @@ def nat_to_bool (n : Nat) : Nat :=
 #eval nat_to_bool 3
 #eval nat_to_bool 0
 
+def nat_to_bool1 (n : Nat) : Nat :=
+  match n with
+  | .zero => 1
+  | .succ k => k
+
+#eval nat_to_bool 3
 
 structure Group where
   element : Type u
@@ -218,12 +224,6 @@ end Hidden
 
 #check Or.elim
 
-/-
-As exercises, we encourage you to develop a notion of composition for partial functions
-from α to β and β to γ, and show that it behaves as expected. We also encourage you to
-show that Bool and Nat are inhabited, that the product of two inhabited types is inhabited,
-and that the type of functions to an inhabited type is inhabited.
--/
 
 structure MyAnd (a b : Prop) : Prop where
   intro ::
@@ -234,3 +234,79 @@ theorem MyAnd_commutes (p q : Prop) : MyAnd p q ↔ MyAnd q p :=
   Iff.intro
   (fun h : MyAnd p q => MyAnd.intro (h.right) (h.left))
   (fun h : MyAnd q p => MyAnd.intro (h.right) (h.left))
+
+
+def add (m n : Nat) : Nat :=
+  match n with
+  | Nat.zero   => m
+  | Nat.succ n => Nat.succ (add m n)
+
+#eval add 3 4
+
+open Nat
+
+#check Nat.recOn
+#check Nat.casesOn
+--recOn as induction principle
+theorem zero_add (n : Nat) : 0 + n = n :=
+  Nat.recOn (motive := fun x => 0 + x = x)
+   n
+   (show 0 + 0 = 0 from rfl)
+   (fun (n : Nat) (ih : 0 + n = n) =>
+    show 0 + (n + 1) = n + 1 from
+    calc 0 + (n + 1)
+      _ = (0 + n) + 1 := rfl
+      _ = n + 1       := by rw [ih])
+
+theorem zero_add_simp (n : Nat) : 0 + n = n :=
+  Nat.recOn (motive := fun x => 0 + x = x)
+   n
+   (show 0 + 0 = 0 from rfl)
+   (fun (n : Nat) (ih : 0 + n = n) => by simp only [succ_eq_add_one, Nat.zero_add])
+
+
+-- Addition is associative using recOn
+theorem add_assoc (m n k : Nat) : m + n + k = m + (n + k) :=
+  Nat.recOn (motive := fun k => m + n + k = m + (n + k)) k
+    (show m + n + 0 = m + (n + 0) from rfl)
+    (fun k (ih : m + n + k = m + (n + k)) =>
+      show m + n + (k + 1) = m + (n + (k + 1)) from
+      calc m + n + (k + 1)
+        _ = (m + n + k) + 1   := by rw [<- Nat.add_assoc]
+        _ = (m + (n + k)) + 1 := by rw [ih]
+        _ = m + ((n + k) + 1) := by rw [Nat.add_assoc]
+        _ = m + (n + (k + 1)) := by rw [Nat.add_assoc])
+
+theorem add_assoc_simp (m n k : Nat) : m + n + k = m + (n + k) :=
+  Nat.recOn (motive := fun k => m + n + k = m + (n + k)) k
+    rfl
+    (fun k ih => by simp [add_succ (m + n) k, ih]; rfl)
+
+#check Nat.succ_add
+
+--filling sorry as exercise
+
+theorem add_comm (m n : Nat) : m + n = n + m :=
+  Nat.recOn (motive := fun x => m + x = x + m) n
+   (show m + 0 = 0 + m by rw [Nat.zero_add, Nat.add_zero])
+   (fun (n : Nat) (ih : m + n = n + m) =>
+    show m + succ n = succ n + m from
+    calc m + succ n
+      _ = succ (m + n) := rfl
+      _ = succ (n + m) := by rw [ih]
+      _ = succ n + m   := by rw [Nat.succ_add])
+
+/-
+As exercises, we encourage you to develop a notion of composition for partial functions
+from α to β and β to γ, and show that it behaves as expected. We also encourage you to
+show that Bool and Nat are inhabited, that the product of two inhabited types is inhabited,
+and that the type of functions to an inhabited type is inhabited.
+-/
+
+#check Function.comp
+theorem partial_function_composition {α β γ a} (f : α → Option β) (g : Option β →  γ) :
+  (g ∘ f) a = g (f a) := by rfl
+
+--shows Bool is inhabited
+#check (inferInstance : Inhabited Bool)
+#check (inferInstance : Inhabited (Prod Bool Nat))
