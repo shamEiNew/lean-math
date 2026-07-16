@@ -9,5 +9,5 @@
  "isModule": false,
  "importArts":
  {"LeanMath.Basic":
-  ["/home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath/Basic.olean"]},
+  [["/home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath/Basic.olean"]]},
  "dynlibs": []}
