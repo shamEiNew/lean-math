@@ -310,3 +310,37 @@ theorem partial_function_composition {α β γ a} (f : α → Option β) (g : Op
 --shows Bool is inhabited
 #check (inferInstance : Inhabited Bool)
 #check (inferInstance : Inhabited (Prod Bool Nat))
+
+
+--Other Recursive types
+#eval List.cons 1 (List.cons 2 (List.cons 3 List.nil)) == [1, 2, 3]
+
+
+namespace Hidden
+inductive List (α : Type u) where
+  | nil  : List α
+  | cons (h : α) (t : List α) : List α
+
+namespace List
+
+def append (as bs : List α) : List α :=
+  match as with
+  | nil       => bs
+  | cons a as => cons a (append as bs)
+
+theorem nil_append (as : List α) : append nil as = as := by rfl
+
+theorem cons_append (a : α) (as bs : List α) :
+    append (cons a as) bs = cons a (append as bs) :=
+  rfl
+
+set_option pp.universes false
+set_option pp.fullNames false
+set_option pp.explicit false
+theorem append_nil (as : List α) :
+    append as nil = as := by
+    induction as with
+    | nil => rfl
+    | cons x xs ih => simp [cons_append, ih]
+end List
+end Hidden
