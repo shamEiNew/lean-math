@@ -337,10 +337,18 @@ theorem cons_append (a : α) (as bs : List α) :
 set_option pp.universes false
 set_option pp.fullNames false
 set_option pp.explicit false
+
 theorem append_nil (as : List α) :
     append as nil = as := by
     induction as with
     | nil => rfl
     | cons x xs ih => simp [cons_append, ih]
+
+theorem append_assoc (as bs cs : List α) :
+    append (append as bs) cs = append as (append bs cs) := by
+    induction as with
+    | nil => simp [nil_append]
+    | cons x xs ih => simp [cons_append, ih]
+
 end List
 end Hidden
