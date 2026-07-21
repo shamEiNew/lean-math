@@ -536,6 +536,20 @@ example (m n k : Nat) (h : succ (succ m) = succ (succ n))
   injection h' with h''
   rw [h'']
 
+
+--Inductive Families
+inductive Vect (α : Type u) : Nat → Type u where
+  | nil  : Vect α 0
+  | cons : α → {n : Nat} → Vect α n → Vect α (n + 1)
+
+#check Vect Bool 5
+
+
+
+
+
+
+
 /-
 Exercises
 -/
