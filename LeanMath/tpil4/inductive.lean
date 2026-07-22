@@ -544,10 +544,18 @@ inductive Vect (α : Type u) : Nat → Type u where
 
 #check Vect Bool 5
 
+#check Eq.rec
+#check Nat.rec
 
+#check Eq 1 2  --this just builds a prop
 
+example : Eq Nat Nat := Eq.refl _ -- it can act on types
 
+theorem subst {α : Type u} {a b : α} {p : α → Prop}
+    (h₁ : Eq a b) (h₂ : p a) : p b :=
+  Eq.rec (motive := fun x _ => p x) h₂ h₁
 
+#print subst
 
 
 /-
