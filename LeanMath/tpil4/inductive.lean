@@ -557,6 +557,30 @@ theorem subst {α : Type u} {a b : α} {p : α → Prop}
 
 #print subst
 
+variable {α β : Type u} {a b c : α}
+
+theorem symm_eq (h : Eq a b) : Eq b a :=
+  match h with
+  | rfl => rfl
+
+theorem trans_eq (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c :=
+  Eq.rec (motive := fun x _ => Eq a x) h₁ h₂
+
+theorem trans_eq_1 (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c := by
+  apply subst
+  · exact h₂
+  · exact h₁
+
+theorem trans_eq_2 (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c :=
+  match h₁ with
+  | rfl => h₂
+
+theorem congr_1 (f : α → β) (h : Eq a b) : Eq (f a) (f b) :=
+  Eq.rec (motive := fun x _ => Eq (f a) (f x)) rfl h
+
+theorem congr_2 (f : α → β) (h : Eq a b) : Eq (f a) (f b) :=
+  match h with
+  | rfl => rfl
 
 /-
 Exercises
