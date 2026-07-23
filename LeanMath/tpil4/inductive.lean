@@ -566,6 +566,9 @@ theorem symm_eq (h : Eq a b) : Eq b a :=
 theorem trans_eq (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c :=
   Eq.rec (motive := fun x _ => Eq a x) h₁ h₂
 
+#check fun (h₁ : Eq 1 2) (h₂ : Eq 2 3) => trans_eq h₁ h₂
+#check fun (h : Eq 1 2) => False.elim (absurd h (by decide))
+example : Eq 1 3 := trans_eq (rfl : Eq 1 1) (by decide : Eq 1 3) -- decide fails
 theorem trans_eq_1 (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c := by
   apply subst
   · exact h₂
@@ -616,6 +619,13 @@ def subtract (n m : Nat) : Nat :=
   | 0        => n
   | .succ x  => pred (subtract n x)
 
+def exponent (a n : Nat) : Nat :=
+  match n with
+  | 0 => 1
+  | .succ x => multiply a (exponent a x)
+
+
+
 #eval multiply 1 1
 #eval multiply 1 0
 #eval multiply 2 4
@@ -623,5 +633,7 @@ def subtract (n m : Nat) : Nat :=
 #eval pred 5
 #eval subtract 4 0
 #eval subtract 4 1
+
+#eval exponent 5 3
 
 end exercises
