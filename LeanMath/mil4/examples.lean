@@ -38,3 +38,20 @@ example (a b c : ℝ) : a * (b * c) = b * (a * c) := by
   rw [<- mul_assoc a b c]
   rw [mul_comm a b]
   rw [mul_assoc b a c]
+
+
+open Algebra
+
+#check ZMod 5
+#check Field
+
+theorem zmodn_field_iff_n_is_prime {n : Nat} (h : n ≠ 0) :
+  IsField (ZMod n) ↔ Prime n := by
+  apply Iff.intro
+
+  · intro h1
+    by_cases hp : Prime n
+    · exact hp
+    · have hf : ¬ IsField (ZMod n) := by sorry
+      exact False.elim (hf h1)
+  · sorry
