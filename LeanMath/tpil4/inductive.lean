@@ -603,7 +603,6 @@ def add (m n : Nat) : Nat :=
   | Nat.zero   => m
   | Nat.succ n => Nat.succ (add m n)
 
-
 def multiply (m n : Nat) : Nat :=
   match n with
   | 0 => 0
