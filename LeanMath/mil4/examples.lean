@@ -61,7 +61,7 @@ theorem zmodn_field_iff_n_is_prime {n : Nat} (h : n ≠ 0) (h2 : n ≥ 2) :
         intro h1
         have hm0 : m ≠ 0 := by intro rfl; simp at hq; exact h hq
         have hq0 : q ≠ 0 := by intro rfl; simp at hq; exact h hq
-        have hq_ne1 : q ≠ 1 := by rintro rfl; simp at hq; exact hm_neN hq.symm
+        have hq_ne1 : q ≠ 1 := by intro rfl; simp at hq; exact hm_neN hq.symm
         have hm2 : 2 ≤ m := by omega
         have hq2 : 2 ≤ q := by omega
         have hmltn : m < n := by
@@ -84,20 +84,6 @@ theorem zmodn_field_iff_n_is_prime {n : Nat} (h : n ≠ 0) (h2 : n ≥ 2) :
         · exact hmcast h0
         · exact hqcast h0
       exact False.elim (hf h1)
-  · intro h1
-    have he_pair : ∃ (x : ZMod n), ∃ (y : ZMod n), x ≠ y := by
-      haveI : Fact (1 < n) := ⟨by omega⟩
-      exact ⟨0, 1, zero_ne_one⟩
-    have hmc : ∀ x y : ZMod n, x * y = y * x := fun x y => mul_comm x y
-    have inverse_exists {a : ZMod n} : a ≠ 0 → ∃ (b : ZMod n), a * b = 1 := by
-      intro ha
-      have ha' : a.val ≠ 0 := by
-        intro h0
-        apply ha
-        rw [ZMod.val_cast_of_lt (a := (0:ℕ))] -- not quite; see note below
-        sorry
-      have coprime : Nat.gcd n a.val = 1 := (Nat.coprime_primes ...).mpr -- see below
-      sorry
-
+  · sorry
 
 --IsBezout.gcd_eq_sum

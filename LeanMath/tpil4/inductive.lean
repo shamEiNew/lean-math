@@ -608,31 +608,70 @@ def multiply (m n : Nat) : Nat :=
   | 0 => 0
   | .succ n => add m (multiply m n)
 
+#eval multiply 1 1
+#eval multiply 1 0
+#eval multiply 2 4
+
 def pred (n : Nat) : Nat :=
   match n with
   | 0 => 0
   | .succ x => x
+
+#eval pred 5
 
 def subtract (n m : Nat) : Nat :=
   match m with
   | 0        => n
   | .succ x  => pred (subtract n x)
 
+#eval subtract 4 0
+#eval subtract 4 1
+
 def exponent (a n : Nat) : Nat :=
   match n with
   | 0 => 1
   | .succ x => multiply a (exponent a x)
 
-
-
-#eval multiply 1 1
-#eval multiply 1 0
-#eval multiply 2 4
-
-#eval pred 5
-#eval subtract 4 0
-#eval subtract 4 1
-
 #eval exponent 5 3
+
+def mylength (l : List α) : Nat :=
+  match l with
+  | [] => 0
+  | _ :: xs =>(mylength xs) + 1
+
+#eval mylength ([true, false, true]:List Bool)
+
+def reverse (l: List α) : List α :=
+  match l with
+  | [] => []
+  | x :: xs =>  List.append (reverse xs) [x]
+
+#eval! reverse [1, 2, 3, 4, 5, 6]
+
+#check List.rec
+theorem mylength_is_length (l : List α) : mylength l = List.length l := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih => simp [mylength, ih]
+
+theorem mylength_distributes (l s: List α) : mylength (l ++ s) = mylength l + mylength s := by
+  induction l with
+  | nil => simp [mylength];
+  | cons x xs ih => simp [mylength, ih, add_assoc]; rw [add_comm]
+
+theorem mylength_is_invariant (l : List α) : mylength (reverse l) = mylength l := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih => simp [reverse, mylength_distributes, ih];rfl
+
+
+
+
+
+
+
+
+
+
 
 end exercises
