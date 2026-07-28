@@ -602,6 +602,9 @@ def isOdd (n:Nat)  : n = 1 → Odd 1  := by
   subst h
   exact Odd.odd_succ 0 Even.even_zero
 
+#check Odd 1 --prop type
+#check isOdd 1 rfl --itslef has type Odd 1
+#check Even.even_succ
 #check Even.even_succ 1 (isOdd 1 rfl)
 #eval Nat.mod 3 2
 
