@@ -568,7 +568,7 @@ theorem trans_eq (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c :=
 
 #check fun (h₁ : Eq 1 2) (h₂ : Eq 2 3) => trans_eq h₁ h₂
 #check fun (h : Eq 1 2) => False.elim (absurd h (by decide))
-example : Eq 1 3 := trans_eq (rfl : Eq 1 1) (by decide : Eq 1 3) -- decide fails
+--example : Eq 1 3 := trans_eq (rfl : Eq 1 1) (by decide : Eq 1 3) -- decide fails
 theorem trans_eq_1 (h₁ : Eq a b) (h₂ : Eq b c) : Eq a c := by
   apply subst
   · exact h₂
@@ -584,6 +584,26 @@ theorem congr_1 (f : α → β) (h : Eq a b) : Eq (f a) (f b) :=
 theorem congr_2 (f : α → β) (h : Eq a b) : Eq (f a) (f b) :=
   match h with
   | rfl => rfl
+
+
+-- Mutual and Nested Inductive Types
+
+mutual
+  inductive Even : Nat → Prop where
+    | even_zero : Even 0
+    | even_succ : (n : Nat) → Odd n → Even (n + 1)
+
+  inductive Odd : Nat → Prop where
+    | odd_succ : (n : Nat) → Even n → Odd (n + 1)
+end
+
+def isOdd (n:Nat)  : n = 1 → Odd 1  := by
+  intro h
+  subst h
+  exact Odd.odd_succ 0 Even.even_zero
+
+#check Even.even_succ 1 (isOdd 1 rfl)
+#eval Nat.mod 3 2
 
 /-
 Exercises
