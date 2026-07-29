@@ -687,14 +687,4 @@ theorem mylength_is_invariant (l : List α) : mylength (reverse l) = mylength l 
   | nil => rfl
   | cons x xs ih => simp [reverse, mylength_distributes, ih];rfl
 
-
-
-
-
-
-
-
-
-
-
 end exercises
