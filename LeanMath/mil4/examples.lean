@@ -86,4 +86,11 @@ theorem zmodn_field_iff_n_is_prime {n : Nat} (h : n ≠ 0) (h2 : n ≥ 2) :
       exact False.elim (hf h1)
   · sorry
 
+
 --IsBezout.gcd_eq_sum
+theorem BezoutIdentity (a : ℤ) (b : ℤ) (h : a.gcd b = d) :
+    ∃ x y , a*x + b*y = d := by
+    let S : Set ℤ   := {n | ∃ x y, (n = a * x + b * y) ∧ (n > 0)}
+    have hS_nonempty : S.Nonempty := by sorry
+    obtain d := WellFounded.min _ _ hS_nonempty
+    sorry
