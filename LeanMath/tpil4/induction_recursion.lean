@@ -73,6 +73,10 @@ def fib : Nat → Nat
 
 #eval fib 10
 
+--#reduce fib <n> is efficient because it uses the
+-- definition sent to the kernel that is based on the brecOn construction.
+#reduce fib 100
+
 def fibFast (n : Nat) : Nat :=
   (loop n).2
 where
@@ -100,3 +104,14 @@ def factCapped (n limit : Nat) : Nat × Bool :=
         if acc' > limit then (acc', false) else loop m acc'
 
 #eval factCapped 5 100
+
+
+def replicate (n : Nat) (a : α) : List α :=
+  let rec loop : Nat → List α → List α
+    | 0,   as => as
+    | n+1, as => loop n (a::as)
+  loop n []
+
+#eval replicate 5 "Sham"
+
+#check @replicate.loop
