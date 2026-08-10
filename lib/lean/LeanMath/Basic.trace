@@ -1,13 +1,13 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["3ba2b048c653336d.olean"],
+ {"o": ["6b249eca1f5792c3.olean"],
   "m": false,
   "i": "3f155107398e2019.ilean",
   "c": "6f9349c81a62b8f5.c"},
  "log":
  [{"message":
-   ".> LEAN_PATH=/home/runner/work/lean-math/lean-math/.lake/packages/Cli/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/batteries/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/Qq/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/aesop/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/importGraph/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/plausible/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/mathlib/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/build/lib/lean /home/runner/.elan/toolchains/leanprover--lean4---v4.33.0-rc2/bin/lean /home/runner/work/lean-math/lean-math/LeanMath/Basic.lean -o /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath/Basic.olean -i /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath/Basic.ilean -c /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath/Basic.c --setup /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath/Basic.setup.json --json",
+   ".> LEAN_PATH=/home/runner/work/lean-math/lean-math/.lake/packages/Cli/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/batteries/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/Qq/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/aesop/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/importGraph/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/plausible/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/packages/mathlib/.lake/build/lib/lean:/home/runner/work/lean-math/lean-math/.lake/build/lib/lean /home/runner/.elan/toolchains/leanprover--lean4---v4.33.0/bin/lean /home/runner/work/lean-math/lean-math/LeanMath/Basic.lean -o /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath/Basic.olean -i /home/runner/work/lean-math/lean-math/.lake/build/lib/lean/LeanMath/Basic.ilean -c /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath/Basic.c --setup /home/runner/work/lean-math/lean-math/.lake/build/ir/LeanMath/Basic.setup.json --json",
    "level": "trace"},
   {"message": "LeanMath/Basic.lean:5:0: p ∧ q : Prop", "level": "info"},
   {"message": "LeanMath/Basic.lean:7:0: Or (a b : Prop) : Prop",
