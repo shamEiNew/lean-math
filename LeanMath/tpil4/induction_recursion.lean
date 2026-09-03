@@ -115,3 +115,9 @@ def replicate (n : Nat) (a : α) : List α :=
 #eval replicate 5 "Sham"
 
 #check @replicate.loop
+
+
+variable (α : Sort u)
+variable (r : α → α → Prop)
+
+#check (Acc r : α → Prop)#check (WellFounded r : Prop)
