@@ -94,3 +94,12 @@ theorem BezoutIdentity (a : ℤ) (b : ℤ) (h : a.gcd b = d) :
     have hS_nonempty : S.Nonempty := by sorry
     obtain d := WellFounded.min Nat.lt_wfRel.wf S
     sorry
+
+/-
+A first countable T1 Space has singeltons as $G_\delta$ sets.
+-/
+theorem singleton_G_delta {X : Type} [TopologicalSpace X] [T1Space X]
+[FirstCountableTopology X] (x : X) :
+    IsGδ ({x} : Set X) := by
+    obtain ⟨U, hU⟩ := FirstCountableTopology.firstCountable x
+    sorry
